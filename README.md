@@ -16,7 +16,7 @@ chmod +x ./do_full_run.sh
 
 Typical use would be 
 ```bash
-./do_full_run.sh -n 20 -p 150000 -s 2017 -e 2023 -g false
+./do_full_run.sh -b 20 -p 150000 -s 2017 -e 2023 -g false
 ```
 
 or 
