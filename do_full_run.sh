@@ -126,7 +126,7 @@ parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
                                 -e $END_YEAR \
                                 -g $GUI \
                                 -f \
-								::: {100..5000..100}
+                                ::: {100..5000..100}
 
 # Tidy output folders, removing empty database folders and redundant input folders (keeps csvs)
 rm -r ./output/202*/database ./output/202*/input
