@@ -119,7 +119,25 @@ then
   exit_abnormal
 fi
 
+if ! test -f simpaths.jar
+then
+    echo "This must be run in the same directory as the compiled (with dependencies) \`simpaths.jar\`"
+    exit_abnormal
+fi
+
+if ! test -d input
+then
+    echo "This must be run in the same directory as the \`input/\` folder"
+    exit_abnormal
+fi
+
+if ! test -d output/logs
+then
+    mkdir -p output/logs
+fi
+
 # Runs 1,000 runs as 50 sequential runs of n=20 with 50 unique starting seeds
+
 parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
                                 -p $POPULATION_SIZE \
                                 -s $START_YEAR \
@@ -127,6 +145,7 @@ parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
                                 -g $GUI \
                                 -f \
                                 ::: {100..5000..100}
+
 
 # Tidy output folders, removing empty database folders and redundant input folders (keeps csvs)
 rm -r ./output/202*/database ./output/202*/input
