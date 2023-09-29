@@ -14,7 +14,7 @@ set -o errexit -o noclobber -o pipefail -o nounset
 usage() {
   echo "Usage: sh ./$0 <[options]>
         Options:
-                -b    --batch_size        The number od simulations to run in one batch, strictly integer and positive
+                -b    --batch_size        The number of simulations to run in one batch, strictly integer and positive
                 -p    --population_size   The size of a population, strictly integer and positive
                 -s    --start_year        The year simulation starts, from 2010 to 2023
                 -e    --end_year          The year simulation ends, from 2010 to 2023, greater or equal than \`-s\`
@@ -137,12 +137,15 @@ then
 fi
 
 # Runs 1,000 runs as 50 sequential runs of n=20 with 50 unique starting seeds
-seq 100 100 5000 | parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
-                                                   -p $POPULATION_SIZE \
-                                                   -s $START_YEAR \
-                                                   -e $END_YEAR \
-                                                   -g $GUI \
-                                                   -f
+
+parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
+                                -p $POPULATION_SIZE \
+                                -s $START_YEAR \
+                                -e $END_YEAR \
+                                -g $GUI \
+                                -f \
+                                ::: {100..5000..100}
+
 
 # Tidy output folders, removing empty database folders and redundant input folders (keeps csvs)
 rm -r ./output/202*/database ./output/202*/input
@@ -151,9 +154,4 @@ rm -r ./output/202*/database ./output/202*/input
 # WARNING: I/O heavy, saturates SATA3, requires extra temporary space
 sh ./remove_trailing_commas.sh
 
-# Text myself that it's all done
-{ # try
-  curl "https://api.telegram.org/bot${Notify_bot_key}/sendMessage?text=Done%20copying%20all%20files&chat_id=${telegram_chatid}" &&
-} || { # catch
-  echo "Failed to send a confirmation, logging success anyway."
-}
+echo "Successfully completed runs"
