@@ -15,7 +15,7 @@ usage() {
   echo "Usage: sh ./$0 <[options]>
         Options:
                 -b    --batch_size        The number of simulations to run in one batch, strictly integer and positive
-                -p    --population_size   The size of a population, strictly integer and positive
+                -p    --population        The size of a population, strictly integer and positive
                 -s    --start_year        The year simulation starts, from 2010 to 2023
                 -e    --end_year          The year simulation ends, from 2010 to 2023, greater or equal than \`-s\`
                 -g    --gui               GUI flag, \`true\` or \`false\` to enable/disable GUI support" 1>&2
@@ -28,7 +28,7 @@ exit_abnormal() {
 }
 
 # parse input arguments
-VALID_ARGS="$(getopt -o b:p:s:e:g: -l batch-size:,population:,start_year:,end_year:,gui: --name "$0" -- "$@")"
+VALID_ARGS="$(getopt -o b:p:s:e:g: -l batch_size:,population:,start_year:,end_year:,gui: --name "$0" -- "$@")"
 
 eval set -- "$VALID_ARGS"
 
