@@ -17,8 +17,7 @@ usage() {
                 -b    --batch_size        The number of simulations to run in one batch, strictly integer and positive
                 -p    --population        The size of a population, strictly integer and positive
                 -s    --start_year        The year simulation starts, from 2010 to 2023
-                -e    --end_year          The year simulation ends, from 2010 to 2023, greater or equal than \`-s\`
-                -g    --gui               GUI flag, \`true\` or \`false\` to enable/disable GUI support" 1>&2
+                -e    --end_year          The year simulation ends, from 2010 to 2023, greater or equal than \`-s\`" 1>&2
 }
 
 # Function: print usage and exit with error.
@@ -28,7 +27,7 @@ exit_abnormal() {
 }
 
 # parse input arguments
-VALID_ARGS="$(getopt -o b:p:s:e:g: -l batch_size:,population:,start_year:,end_year:,gui: --name "$0" -- "$@")"
+VALID_ARGS="$(getopt -o b:p:s:e: -l batch_size:,population:,start_year:,end_year: --name "$0" -- "$@")"
 
 eval set -- "$VALID_ARGS"
 
@@ -37,6 +36,10 @@ re_is_year='^20(1[0-9]|2[0-3])$'
 
 # Regex: match whole positive numbers only
 re_isanum='^[0-9]*[1-9][0-9]*$'
+
+# Regex: match years in range [2010 : 2099]
+# Note: this is an artificial limit, actual simulations have no upper bound
+re_is_year_end='^20[1-9][0-9]$'
 
 while true
 do
@@ -79,27 +82,14 @@ do
             ;;
         -e|--end_year)
             # if $2 not in range:
-            if ! [[ $2 =~ $re_is_year ]]
+            if ! [[ $2 =~ $re_is_year_end ]]
             then
-              echo "Error: end year must be in range [2010 : 2023]" >&2
+              echo "Error: end year must be in range [2010 : 2099]" >&2
               # Exit abnormally.
               exit_abnormal
             fi
             # Set END_YEAR to specified value.
             END_YEAR=$2
-            shift 2
-            ;;
-        -g|--gui)
-            re_is_bool='^(true|false)$'
-            # if $2 not boolean:
-            if ! [[ $2 =~ $re_is_bool ]]
-            then
-              echo "Error: must be either \`true\` or \`false\`, case-sensitive" >&2
-              # Exit abnormally.
-              exit_abnormal
-            fi
-            # Set GUI to specified value.
-            GUI=$2
             shift 2
             ;;
         --)
@@ -142,7 +132,7 @@ parallel java -jar simpaths.jar -r {} -n $BATCH_SIZE \
                                 -p $POPULATION_SIZE \
                                 -s $START_YEAR \
                                 -e $END_YEAR \
-                                -g $GUI \
+                                -g false \
                                 -f \
                                 ::: {100..5000..100}
 
