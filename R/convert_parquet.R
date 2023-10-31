@@ -27,15 +27,16 @@ missing_values <- c("",
 #' input string, there are no checks for all other cases. This function is
 #' designed to help with unconventional file names
 #'
-#' @param x A string
+#' @param x A string of \\d+\\_\\d+ format, comprised of a timestamp and a batch
+#'  id
 #'
 #' @return The second element of the substring array
 #'
 #' @examples
 #' get.batch_id("1_2")
-get.batch_id <- function(x) {
+get.batch_id <- function(x, suffix = "00") {
   batch_id <- x |> str_split_1(pattern = "_")
-  gsub("00", "", batch_id[[2]]) |> as.integer()
+  gsub(suffix, "", batch_id[[2]]) |> as.integer()
 }
 
 #' Converts simulation results from `*.csv` files to `*.parquet`.
