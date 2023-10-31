@@ -183,7 +183,7 @@ convert.single_simulation <- function(path_string,
 #'
 #' @seealso `convert.single_simulation`
 convert.multiple_simulations <- function(scenario_names = c("baseline", "reform"),
-                                         paths_pattern = "^2023\\d+\\_([1-9]|[1234][0-9]|50)00$") {
+                                         paths_pattern = "^20\\d+_\\d+$") {
   for (sid in scenario_names) {
     paths <- sid |> paste("output", sep = "/") |> dir()
     paths[str_detect(paths, paths_pattern)] |>
