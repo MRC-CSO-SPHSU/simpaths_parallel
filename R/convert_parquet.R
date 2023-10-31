@@ -70,22 +70,13 @@ convert.single_simulation <- function(path_string,
                                       delete_original = FALSE) {
   batch_id <- get.batch_id(path_string)
   
-  f.base <- scenario_id |>
-    paste("output", sep = "/") |>
-    paste(path_string, sep = "/") |>
-    paste("csv", sep = "/")
+  f.base <- file.path(scenario_id, "output", path_string, "csv")
   
-  f.person <- f.base |>
-    paste("Person", sep = "/") |>
-    paste("csv", sep = ".")
+  f.person <- file.path(f.base, "Person.csv")
   
-  f.household <- f.base |>
-    paste("Household", sep = "/") |>
-    paste("csv", sep = ".")
+  f.household <- file.path(f.base, "Household.csv")
   
-  f.benefitunit <- f.base |>
-    paste("BenefitUnit", sep = "/") |>
-    paste("csv", sep = ".")
+  f.benefitunit <- file.path(f.base, "BenefitUnit.csv")
   
   f.person |>
     open_csv_dataset(
