@@ -67,8 +67,9 @@ convert.single_simulation <- function(path_string,
                                       files = c("Household",
                                                 "Person",
                                                 "BenefitUnit"),
-                                      delete_original = FALSE) {
-  batch_id <- get.batch_id(path_string)
+                                      delete_original = FALSE,
+                                      suffix = "00") {
+  batch_id <- get.batch_id(path_string, suffix)
   
   f.base <- file.path(scenario_id, "output", path_string, "csv")
   
@@ -183,11 +184,12 @@ convert.single_simulation <- function(path_string,
 #'
 #' @seealso `convert.single_simulation`
 convert.multiple_simulations <- function(scenario_names = c("baseline", "reform"),
-                                         paths_pattern = "^20\\d+_\\d+$") {
+                                         paths_pattern = "^20\\d+_\\d+$",
+                                         suffix = "00") {
   for (sid in scenario_names) {
     paths <- sid |> paste("output", sep = "/") |> dir()
     paths[str_detect(paths, paths_pattern)] |>
-      map(\(x) convert.single_simulation(x, sid), .progress = TRUE)
+      map(\(x) convert.single_simulation(x, sid, suffix), .progress = TRUE)
   }
 }
 
