@@ -187,7 +187,7 @@ convert.multiple_simulations <- function(scenario_names = c("baseline", "reform"
                                          paths_pattern = "^20\\d+_\\d+$",
                                          suffix = "00") {
   for (sid in scenario_names) {
-    paths <- sid |> paste("output", sep = "/") |> dir()
+    paths <- file.path(sid, "output") |> dir()
     paths[str_detect(paths, paths_pattern)] |>
       map(\(x) convert.single_simulation(x, sid, suffix), .progress = TRUE)
   }
