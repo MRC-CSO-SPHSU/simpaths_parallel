@@ -4,7 +4,7 @@ library(stringr)
 library(purrr)
 library(furrr)
 
-source("./schemas/schemas.R")
+source("R/schemas/schemas.R")
 
 missing_values <- c("",
                     "NA",
