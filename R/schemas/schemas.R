@@ -4,13 +4,20 @@ schema.person <- schema(
   field("run", uint16(), nullable = FALSE),
   field("time", float32(), nullable = FALSE),
   field("id_Person", uint64(), nullable = FALSE),
-  field("L1_potentialHourlyEarnings", float32(), nullable = FALSE),
+  field("L1_fullTimeHourlyEarningsPotential", float32()),
   field("adultchildflag", bool(), nullable = TRUE),
+  field("careFormalExpenditureWeekly", float32()),
+  field("careHoursFromDaughterWeekly", float32()),
+  field("careHoursFromFormalWeekly", float32()),
+  field("careHoursFromOtherWeekly", float32()),
+  field("careHoursFromParentWeekly", utf8()),
+  field("careHoursFromPartnerWeekly", float32()),
+  field("careHoursFromSonWeekly", float32()),
+  field("careHoursProvidedWeekly", float32()),
+  field("careProvidedTo", utf8()),
+  field("careProvidedTo_lag1", utf8()),
   field("countFemale", float32(), nullable = FALSE),
   field("countMale", float32(), nullable = FALSE),
-  field("countNaN", uint8(), nullable = FALSE),
-  field("countOK", uint8(), nullable = FALSE),
-  field("countOKover32", uint8(), nullable = FALSE),
   field("covidModuleGrossLabourIncomeBaseline_Xt5", utf8(), nullable = FALSE),
   field("dag", uint8(), nullable = FALSE),
   field("dcpagdf", int8(), nullable = TRUE),
@@ -25,8 +32,8 @@ schema.person <- schema(
   field("dehsp_c3", utf8(), nullable = TRUE),
   field("der", bool(), nullable = FALSE),
   field("dgn", bool(), nullable = FALSE),
-  field("dhe", float32(), nullable = FALSE),
-  field("dhesp", float32(), nullable = TRUE),
+  field("dhe", utf8(), nullable = FALSE),
+  field("dhesp", utf8(), nullable = TRUE),
   field("dhh_owned", bool(), nullable = FALSE),
   field("dhm", float32(), nullable = FALSE),
   field("dhm_ghq", bool(), nullable = FALSE),
@@ -37,6 +44,7 @@ schema.person <- schema(
   field("flagDies", bool(), nullable = TRUE),
   field("flagEmigrate", bool(), nullable = TRUE),
   field("flagImmigrate", bool(), nullable = TRUE),
+  field("fullTimeHourlyEarningsPotential", float32()),
   field("hoursWorkedWeekly", float32(), nullable = TRUE),
   field("household_status", utf8(), nullable = FALSE),
   field("idBenefitUnit", uint64(), nullable = FALSE),
@@ -53,8 +61,8 @@ schema.person <- schema(
   field("les_c7_covid", utf8(), nullable = TRUE),
   field("lesdf_c4", utf8(), nullable = TRUE),
   field("lessp_c4", utf8(), nullable = TRUE),
+  field("needSocialCare", bool()),
   field("partnership_samesex", bool(), nullable = TRUE),
-  field("potentialHourlyEarnings", float32(), nullable = FALSE),
   field("sIndex", float32(), nullable = TRUE),
   field("sIndexNormalised", float32(), nullable = TRUE),
   field("scoreFemale", float32(), nullable = FALSE),
@@ -74,9 +82,6 @@ schema.person <- schema(
 schema.person.save <- schema.person
 schema.person.save[[match("countFemale", names(schema.person))]] <- Field$create("countFemale", uint8())
 schema.person.save[[match("countMale", names(schema.person))]] <- Field$create("countMale", uint8())
-schema.person.save[[match("countNaN", names(schema.person))]] <- Field$create("countNaN", uint8())
-schema.person.save[[match("countOK", names(schema.person))]] <- Field$create("countOK", uint8())
-schema.person.save[[match("countOKover32", names(schema.person))]] <- Field$create("countOKover32", uint8())
 schema.person.save[[match("labourSupplyWeekly", names(schema.person))]] <- Field$create("labourSupplyWeekly", uint8())
 schema.person.save[[match("time", names(schema.person))]] <- Field$create("time", uint16())
 schema.person.save[[match("idBenefitUnit", names(schema.person))]] <- Field$create("id_BenefitUnit", uint64())
@@ -86,26 +91,20 @@ schema.benefit_unit <- schema(
   field("time", float32(), nullable = FALSE),
   field("id_BenefitUnit", uint64(), nullable = FALSE),
   field("atRiskOfPoverty", uint8(), nullable = FALSE),
-  field("consumptionAnnual", float32(), nullable = TRUE),
+  field("childcareCostPerWeek", float32()),
   field("createdByConstructor", utf8(), nullable = FALSE),
   field("dhh_owned", bool(), nullable = FALSE),
   field("dhhtp_c4", utf8(), nullable = FALSE),
+  field("discretionaryConsumptionPerYear", float32()),
   field("disposableIncomeMonthly", float32(), nullable = FALSE),
   field("equivalisedDisposableIncomeYearly", float32(), nullable = FALSE),
+  field("grossIncomeMonthly", float32()),
   field("idFemale", uint64(), nullable = TRUE),
   field("idHousehold", uint64(), nullable = FALSE),
   field("idMale", uint64(), nullable = TRUE),
   field("liquidWealth", float32(), nullable = TRUE),
   field("n_children_0", uint8(), nullable = FALSE),
   field("n_children_1", uint8(), nullable = FALSE),
-  field("n_children_2", uint8(), nullable = FALSE),
-  field("n_children_3", uint8(), nullable = FALSE),
-  field("n_children_4", uint8(), nullable = FALSE),
-  field("n_children_5", uint8(), nullable = FALSE),
-  field("n_children_6", uint8(), nullable = FALSE),
-  field("n_children_7", uint8(), nullable = FALSE),
-  field("n_children_8", uint8(), nullable = FALSE),
-  field("n_children_9", uint8(), nullable = FALSE),
   field("n_children_10", uint8(), nullable = FALSE),
   field("n_children_11", uint8(), nullable = FALSE),
   field("n_children_12", uint8(), nullable = FALSE),
@@ -114,11 +113,20 @@ schema.benefit_unit <- schema(
   field("n_children_15", uint8(), nullable = FALSE),
   field("n_children_16", uint8(), nullable = FALSE),
   field("n_children_17", uint8(), nullable = FALSE),
+  field("n_children_2", uint8(), nullable = FALSE),
+  field("n_children_3", uint8(), nullable = FALSE),
+  field("n_children_4", uint8(), nullable = FALSE),
+  field("n_children_5", uint8(), nullable = FALSE),
+  field("n_children_6", uint8(), nullable = FALSE),
+  field("n_children_7", uint8(), nullable = FALSE),
+  field("n_children_8", uint8(), nullable = FALSE),
+  field("n_children_9", uint8(), nullable = FALSE),
   field("occupancy", utf8(), nullable = FALSE),
   field("region", utf8(), nullable = FALSE),
   field("size", uint8(), nullable = FALSE),
+  field("socialCareCostPerWeek", float32()),
   field("weight", float32(), nullable = FALSE),
-  field("ydses_c5", utf8(), nullable = FALSE)
+  field("ydses_c5", utf8(), nullable = FALSE),
 )
 
 schema.household <- schema(
@@ -128,3 +136,4 @@ schema.household <- schema(
   field("size", uint8(), nullable = FALSE),
   field("weight", float32(), nullable = FALSE)
 )
+
